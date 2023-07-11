@@ -20,15 +20,19 @@ MENU_OPTIONS=""
 for i in ${!CONTAINERS[@]}; do
     MENU_OPTIONS="${MENU_OPTIONS} $i ${CONTAINERS[$i]}"
 done
-d
 
-CHOICE=$(dialog --menu "Select container:" 10 30 5 \
-    ${MENU_OPTIONS} \
-2>&1 >/dev/tty)
+if [ ${#CONTAINERS[@]} -eq 0 ]; then
+    echo "No containers found!"
+else
+    CHOICE=$(dialog --menu "Select container:" 10 30 5 \
+        ${MENU_OPTIONS} \
+    2>&1 >/dev/tty)
 
-BUTTON=$?
-if [ $BUTTON -eq "0" ];
-then
-    echo -e "\n\nStarting bash on ${CONTAINERS[$CHOICE]}...\n"
-    docker exec -it ${CONTAINERS[$CHOICE]} bash
+    BUTTON=$?
+    if [ $BUTTON -eq "0" ];
+    then
+        echo -e "\n\nStarting bash on ${CONTAINERS[$CHOICE]}...\n"
+        docker exec -it ${CONTAINERS[$CHOICE]} bash
+    fi
 fi
+
